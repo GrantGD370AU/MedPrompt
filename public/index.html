@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MedPrompt — clinical teleprompter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <!-- ===================== LIBRARY ===================== -->
+  <main id="library" class="screen">
+    <header class="lib-head">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-name">MedPrompt</span>
+      </div>
+      <p class="tagline">An AI-augmented teleprompter for clinical conversations.
+        Pick an encounter, or generate one. The prompter can listen and tick off
+        what you've covered — or run it manually with the mic off.</p>
+    </header>
+
+    <section class="lib-section">
+      <div class="lib-section-head">
+        <h2>Encounter guides</h2>
+        <span class="hint" id="health-hint"></span>
+      </div>
+      <div id="guide-grid" class="guide-grid" aria-live="polite">
+        <p class="loading">Loading guides…</p>
+      </div>
+    </section>
+
+    <section class="lib-section">
+      <h2>Generate a new guide</h2>
+      <p class="sub">Describe an encounter and Workers AI will draft a structured prompter you can run immediately.</p>
+      <div class="gen">
+        <input id="gen-topic" type="text" placeholder="e.g. Metformin counselling for newly diagnosed type 2 diabetes" />
+        <div class="gen-row">
+          <select id="gen-type" aria-label="Guide type">
+            <option value="counselling">Counselling</option>
+            <option value="history">History taking</option>
+            <option value="custom">Other</option>
+          </select>
+          <input id="gen-discipline" type="text" placeholder="Discipline (optional)" />
+          <button id="gen-go" class="btn btn-primary">Generate</button>
+        </div>
+        <p id="gen-status" class="gen-status" role="status"></p>
+      </div>
+    </section>
+
+    <footer class="lib-foot">For simulated education and experimental use only. Not for clinical use.</footer>
+  </main>
+
+  <!-- ===================== ENCOUNTER ===================== -->
+  <main id="encounter" class="screen hidden">
+    <header class="enc-bar">
+      <button id="back-btn" class="icon-btn" title="Back to library" aria-label="Back to library">‹</button>
+      <div class="enc-title">
+        <span class="eyebrow" id="enc-type">COUNSELLING</span>
+        <h1 id="enc-name">Guide</h1>
+      </div>
+      <div class="enc-status">
+        <span id="mic-pill" class="pill pill-off">Mic off</span>
+      </div>
+    </header>
+
+    <div class="enc-body">
+      <!-- Teleprompter stage -->
+      <section class="stage" id="stage" aria-label="Teleprompter">
+        <div class="stage-scroll" id="stage-scroll"></div>
+        <div class="reading-line" aria-hidden="true">
+          <span class="rl-tick rl-left"></span>
+          <span class="rl-tick rl-right"></span>
+        </div>
+      </section>
+
+      <!-- Side rail -->
+      <aside class="rail">
+        <div class="progress">
+          <svg class="ring" viewBox="0 0 64 64" aria-hidden="true">
+            <circle class="ring-bg" cx="32" cy="32" r="28"></circle>
+            <circle class="ring-fg" id="ring-fg" cx="32" cy="32" r="28"></circle>
+          </svg>
+          <div class="progress-text">
+            <strong id="prog-count">0 / 0</strong>
+            <span>covered</span>
+          </div>
+        </div>
+
+        <div id="branch-box" class="branch-box hidden">
+          <p class="branch-prompt" id="branch-prompt"></p>
+          <div class="branch-options" id="branch-options"></div>
+        </div>
+
+        <nav class="checklist" id="checklist" aria-label="Steps"></nav>
+
+        <div id="redflags" class="redflags hidden">
+          <h3>Watch for</h3>
+          <ul id="redflags-list"></ul>
+        </div>
+
+        <details class="transcript">
+          <summary>Live transcript</summary>
+          <p class="transcript-note">Audio is transcribed in short chunks and discarded. Only text is kept.</p>
+          <div id="transcript-text" class="transcript-text"></div>
+        </details>
+      </aside>
+    </div>
+
+    <footer class="controls">
+      <button id="prev-btn" class="btn btn-ghost">‹ Prev</button>
+      <button id="record-btn" class="btn btn-record" aria-pressed="false">
+        <span class="rec-dot" aria-hidden="true"></span>
+        <span id="record-label">Start listening</span>
+      </button>
+      <button id="next-btn" class="btn btn-ghost">Next ›</button>
+      <span class="kbd-hint">← → to move · Space next · R to record</span>
+    </footer>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+{
+  "id": "medicine-counselling",
+  "title": "Medicine counselling (general)",
+  "type": "counselling",
+  "discipline": ["pharmacy", "medicine", "nursing"],
+  "summary": "A reusable structure for counselling on a new or changed medicine. Built on the indication–dose–effects–safety–practical frame so it works for most medicines.",
+  "disclaimer": "For simulated education and experimental use only. Not for clinical use.",
+  "redFlags": [
+    "Check allergies before counselling on any new medicine.",
+    "Confirm the patient understands what to do if a serious adverse effect occurs."
+  ],
+  "steps": [
+    {
+      "id": "intro",
+      "label": "Introduction",
+      "cue": "Introduce yourself, confirm identity, and check the patient has time to talk.",
+      "detail": [
+        "Name and role; confirm patient identity.",
+        "Explain you'd like to go through their new medicine."
+      ],
+      "coverageHints": ["my name", "introduce", "confirm your name", "new medicine"]
+    },
+    {
+      "id": "prior",
+      "label": "Prior knowledge",
+      "cue": "Find out what the patient already knows and check allergies.",
+      "detail": [
+        "What have they been told about this medicine?",
+        "Confirm allergies and previous reactions."
+      ],
+      "coverageHints": ["what do you know", "what were you told", "allergies", "allergic"]
+    },
+    {
+      "id": "indication",
+      "label": "What it's for",
+      "cue": "Explain what the medicine is and why it's being used.",
+      "detail": [
+        "Name, class and purpose in plain language.",
+        "Link it to the patient's condition."
+      ],
+      "coverageHints": ["this medicine is for", "it treats", "it helps", "what it does"]
+    },
+    {
+      "id": "dose",
+      "label": "How to take it",
+      "cue": "Explain dose, timing, route and duration.",
+      "detail": [
+        "How much, how often, when and how to take it.",
+        "How long to continue; what to do about a missed dose."
+      ],
+      "coverageHints": ["take one", "twice a day", "with food", "morning", "missed dose", "how long"]
+    },
+    {
+      "id": "effects",
+      "label": "Effects & side effects",
+      "cue": "Cover expected benefits and common or serious side effects.",
+      "detail": [
+        "What improvement to expect and when.",
+        "Common side effects and how to manage them.",
+        "Serious effects that need urgent attention."
+      ],
+      "coverageHints": ["side effects", "you might notice", "if you get", "see a doctor if"]
+    },
+    {
+      "id": "interactions",
+      "label": "Interactions & cautions",
+      "cue": "Cover key interactions, foods, alcohol and other cautions.",
+      "detail": [
+        "Other medicines, OTC and complementary products.",
+        "Food, alcohol and activity cautions."
+      ],
+      "coverageHints": ["other medicines", "over the counter", "alcohol", "avoid", "interaction"]
+    },
+    {
+      "id": "practical",
+      "label": "Storage & supply",
+      "cue": "Cover storage, repeats and follow-up.",
+      "detail": [
+        "How and where to store it.",
+        "Repeats, monitoring and follow-up arrangements."
+      ],
+      "coverageHints": ["store", "storage", "repeat", "follow up", "review"]
+    },
+    {
+      "id": "checkback",
+      "label": "Check understanding",
+      "cue": "Use teach-back, answer questions and safety-net.",
+      "detail": [
+        "Ask the patient to tell you the key points back.",
+        "Invite questions; agree what to do if something goes wrong.",
+        "Confirm support services and close."
+      ],
+      "coverageHints": ["tell me back", "just to check", "any questions", "if you have any problems"]
+    }
+  ]
+}
