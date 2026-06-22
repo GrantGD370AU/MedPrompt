@@ -16,6 +16,10 @@
       <div class="brand">
         <span class="brand-mark" aria-hidden="true"></span>
         <span class="brand-name">MedPrompt</span>
+        <div class="mode-switch" role="group" aria-label="Display mode">
+          <button class="mode-opt" data-mode="desktop">Desktop</button>
+          <button class="mode-opt" data-mode="hololens">HoloLens</button>
+        </div>
       </div>
       <p class="tagline">An AI-augmented teleprompter for clinical conversations.
         Pick an encounter, or generate one. The prompter can listen and tick off
@@ -62,6 +66,7 @@
         <h1 id="enc-name">Guide</h1>
       </div>
       <div class="enc-status">
+        <button id="rail-toggle" class="icon-btn rail-toggle" title="Steps" aria-label="Show steps">☰</button>
         <span id="mic-pill" class="pill pill-off">Mic off</span>
       </div>
     </header>
@@ -117,6 +122,7 @@
       </button>
       <button id="next-btn" class="btn btn-ghost">Next ›</button>
       <span class="kbd-hint">← → to move · Space next · R to record</span>
+      <span class="voice-hint">Say “prompter next”, “prompter back”, “prompter steps”</span>
     </footer>
   </main>
 

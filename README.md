@@ -150,6 +150,7 @@ actually *say*, not clinical jargon.
 
 ## Notes & next steps
 
+- **HoloLens 2**: see below.
 - **React migration**: the `/api/*` contract is stable and UI-agnostic. A React
   frontend can replace `public/` and keep the same Worker.
 - **Whisper container**: the browser records WebM/Opus by default. If a target
@@ -159,3 +160,47 @@ actually *say*, not clinical jargon.
   `coach()` in `src/index.js`.
 - **Pedagogy hooks** (future): export a session debrief (covered vs missed, time on
   each step) for the five-step ADHA-aligned reflection used in the scribe tool.
+
+---
+
+## Running on HoloLens 2
+
+MedPrompt ships with a **HoloLens focus mode** (toggle in the library header, or
+auto-selected from the user agent). It runs as a 2D Edge slate pinned in the
+clinician's view — cues float in front of them while they keep eye contact with
+the patient. The AI coach's auto-advance is the primary hands-free mechanism: the
+prompter moves itself as each checklist item is covered, no gestures required.
+
+What focus mode changes:
+
+- **Single-column layout** sized for the ~52° field of view; the checklist moves
+  into a slide-in overlay behind the **☰ Steps** button.
+- **Larger type and air-tap targets** for gaze + air-tap (which maps to click).
+- **Voice commands via Whisper, not Web Speech.** The Web Speech API does **not**
+  work in Edge on HoloLens 2, so commands are parsed from the transcription stream
+  instead. Say **"prompter next"**, **"prompter back"**, **"prompter steps"**,
+  **"prompter close"**, or **"prompter stop"**. The `prompter` prefix prevents
+  ordinary clinical speech from triggering navigation.
+- **Shorter transcription chunks (~7s)** so voice commands feel responsive, with
+  the **coach debounced (~18s)** so Workers AI spend doesn't balloon. Tune both in
+  `TIMING` in `public/app.js`.
+
+On-device checklist:
+
+1. Open the deployed `workers.dev` (or custom) URL in Edge on the headset; pin the
+   window where it's comfortable.
+2. Grant microphone permission on first **Start listening**. `getUserMedia` works
+   in HoloLens Edge; the head-mounted mic array captures both clinician and patient.
+3. Verify the `prompter …` grammar picks up in your room acoustics and adjust the
+   phrases in `VOICE` (`public/app.js`) if needed.
+
+**Immersive (WebXR) — phase 2.** HoloLens 2 Edge supports `immersive-ar`, so a
+future version can render cues as world- or head-locked holograms via three.js or
+Babylon.js against the same `/api/*` backend. Two things to plan for: the additive
+display renders **black as transparent** (use light glyphs, no dark fills — the
+opposite of the 2D slate), and text must stay within the FOV when head-locked. The
+2D focus mode is the pragmatic live build; immersive is an additive layer, not a
+rewrite of the backend.
+
+Because it's standards-based web, the same app also runs in the Meta Quest browser
+and visionOS Safari — it isn't locked to HoloLens.

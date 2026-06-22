@@ -75,6 +75,10 @@ button { font-family: inherit; cursor: pointer; }
   box-shadow: 0 -5px 0 rgba(255, 255, 255, .35), 0 5px 0 rgba(255, 255, 255, .35);
 }
 .brand-name { font-size: 21px; font-weight: 700; letter-spacing: -.01em; }
+
+.mode-switch { margin-left: auto; display: inline-flex; border: 1px solid var(--line); border-radius: 100px; padding: 3px; background: var(--surface-2); }
+.mode-opt { border: 0; background: transparent; color: var(--text-dim); font-size: 13px; font-weight: 600; padding: 7px 16px; border-radius: 100px; }
+.mode-opt.active { background: var(--teal-deep); color: #fff; }
 .tagline { color: var(--text-dim); font-size: 16px; line-height: 1.55; max-width: 60ch; margin: 18px 0 0; }
 
 .lib-section { margin-top: 48px; }
@@ -220,6 +224,8 @@ button { font-family: inherit; cursor: pointer; }
 .rec-dot { width: 9px; height: 9px; border-radius: 50%; background: #fff; opacity: .8; }
 .btn-record[aria-pressed="true"] .rec-dot { animation: livepulse 1.2s infinite; }
 .kbd-hint { margin-left: auto; font-size: 12px; color: var(--text-dim); font-family: "IBM Plex Mono", monospace; }
+.voice-hint { display: none; margin-left: auto; font-size: 13px; color: var(--text-dim); font-family: "IBM Plex Mono", monospace; }
+.rail-toggle { display: none; }
 
 /* ============================ RESPONSIVE ============================ */
 @media (max-width: 880px) {
@@ -233,3 +239,37 @@ button { font-family: inherit; cursor: pointer; }
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; scroll-behavior: auto !important; transition: none !important; }
 }
+
+/* ============================ HOLOLENS FOCUS MODE ============================ */
+/* Tuned for the ~52° FOV: one large centred cue, big air-tap targets, and the
+   checklist tucked into a slide-in overlay instead of an always-on rail. */
+
+body.hololens .rail-toggle { display: grid; place-items: center; }
+body.hololens .kbd-hint { display: none; }
+body.hololens .voice-hint { display: block; }
+
+/* Single-column stage; rail becomes an overlay. */
+body.hololens .enc-body { grid-template-columns: 1fr; }
+
+body.hololens .rail {
+  position: fixed; top: 66px; right: 0; bottom: 72px; width: min(380px, 80vw);
+  z-index: 20; border-left: 1px solid var(--line);
+  box-shadow: -12px 0 40px rgba(8, 20, 16, .18);
+  transform: translateX(102%); transition: transform .22s ease;
+}
+body.hololens.rail-open .rail { transform: translateX(0); }
+
+/* Bigger, calmer type and targets for a head-mounted display. */
+body.hololens .cue-text { font-size: clamp(34px, 4vw, 52px); line-height: 1.2; }
+body.hololens .cue.is-current .cue-detail li { font-size: clamp(18px, 1.8vw, 23px); }
+body.hololens .stage-scroll { padding: 40vh 9% 46vh; gap: 8vh; }
+body.hololens .reading-line { top: 40vh; }
+
+body.hololens .controls { padding: 16px 26px; gap: 18px; }
+body.hololens .btn { padding: 16px 26px; font-size: 18px; border-radius: 12px; }
+body.hololens .btn-record { padding: 16px 30px; }
+body.hololens .icon-btn { width: 52px; height: 52px; font-size: 26px; }
+body.hololens .enc-bar { padding: 16px 26px; }
+body.hololens .enc-title h1 { font-size: 22px; }
+body.hololens .cl-item { padding: 14px 12px; font-size: 16px; }
+body.hololens .cl-marker { width: 22px; height: 22px; }

@@ -12,9 +12,30 @@ const state = {
   transcript: "",
   recording: false,
   autoFollow: true, // AI advances the prompter; pauses briefly after manual nav
+  hololens: false,  // headset focus mode
+  railOpen: false,  // checklist overlay (HoloLens mode)
+  lastCoachAt: 0,
 };
 
-const CHUNK_MS = 20000; // ~20s segments, matching the scribe-tool cadence
+/* Desktop records in ~20s segments and coaches each one. HoloLens records in
+ * short segments so the "prompter …" voice grammar feels responsive, but the
+ * coach is debounced so Workers AI spend doesn't balloon. */
+const TIMING = {
+  desktop:  { chunkMs: 20000, coachMs: 20000 },
+  hololens: { chunkMs: 7000,  coachMs: 18000 },
+};
+const timing = () => (state.hololens ? TIMING.hololens : TIMING.desktop);
+
+/* Voice grammar (HoloLens). Web Speech API does not work in Edge on the device,
+ * so commands are parsed from the Whisper transcript instead. A "prompter"
+ * prefix keeps ordinary clinical speech from triggering them. */
+const VOICE = [
+  { re: /\bprompter\s+(next|forward|go on)\b/, run: () => move(1) },
+  { re: /\bprompter\s+(back|previous)\b/,       run: () => move(-1) },
+  { re: /\bprompter\s+(steps|menu|checklist)\b/, run: () => toggleRail(true) },
+  { re: /\bprompter\s+(close|hide)\b/,           run: () => toggleRail(false) },
+  { re: /\bprompter\s+(stop|pause)\b/,           run: () => { if (state.recording) stopRecord(); } },
+];
 
 /* ============================ LIBRARY ============================ */
 
@@ -308,7 +329,7 @@ function startSegment() {
   media.timer = setTimeout(() => {
     if (media.recorder && media.recorder.state === "recording")
       media.recorder.stop();
-  }, CHUNK_MS);
+  }, timing().chunkMs);
 }
 
 function stopRecord() {
@@ -338,7 +359,27 @@ async function processSegment(blob) {
     const t = $("#transcript-text");
     t.textContent = state.transcript;
     t.scrollTop = t.scrollHeight;
-    await runCoach();
+
+    // Voice grammar runs on the fresh chunk only (responsive, low false-positives).
+    if (state.hololens) handleVoice(text);
+
+    // Coach is debounced so short HoloLens chunks don't multiply AI calls.
+    const now = Date.now();
+    if (now - state.lastCoachAt >= timing().coachMs) {
+      state.lastCoachAt = now;
+      await runCoach();
+    }
+  }
+}
+
+function handleVoice(chunk) {
+  const text = chunk.toLowerCase();
+  for (const cmd of VOICE) {
+    if (cmd.re.test(text)) {
+      cmd.run();
+      flashStatus("Heard you");
+      break;
+    }
   }
 }
 
@@ -402,7 +443,35 @@ function show(which) {
 
 function backToLibrary() {
   if (state.recording) stopRecord();
+  toggleRail(false);
   show("library");
+}
+
+/* ---- Display mode (Desktop vs HoloLens focus) ---- */
+
+function setMode(mode) {
+  state.hololens = mode === "hololens";
+  document.body.classList.toggle("hololens", state.hololens);
+  try { localStorage.setItem("medprompt-mode", mode); } catch {}
+  $$(".mode-opt").forEach((b) =>
+    b.classList.toggle("active", b.dataset.mode === mode)
+  );
+  if (!state.hololens) toggleRail(false);
+}
+
+function toggleRail(open) {
+  state.railOpen = typeof open === "boolean" ? open : !state.railOpen;
+  document.body.classList.toggle("rail-open", state.railOpen);
+}
+
+function detectMode() {
+  let saved = null;
+  try { saved = localStorage.getItem("medprompt-mode"); } catch {}
+  if (saved) return saved;
+  const ua = navigator.userAgent || "";
+  // HoloLens Edge doesn't always self-identify; treat WebXR + Windows as a hint.
+  if (/HoloLens|Windows Holographic/i.test(ua)) return "hololens";
+  return "desktop";
 }
 
 const esc = (s) =>
@@ -417,6 +486,10 @@ $("#back-btn").addEventListener("click", backToLibrary);
 $("#prev-btn").addEventListener("click", () => move(-1));
 $("#next-btn").addEventListener("click", () => move(1));
 $("#record-btn").addEventListener("click", toggleRecord);
+$("#rail-toggle").addEventListener("click", () => toggleRail());
+$$(".mode-opt").forEach((b) =>
+  b.addEventListener("click", () => setMode(b.dataset.mode))
+);
 
 document.addEventListener("keydown", (e) => {
   if ($("#encounter").classList.contains("hidden")) return;
@@ -427,4 +500,5 @@ document.addEventListener("keydown", (e) => {
   else if (e.key.toLowerCase() === "r") { e.preventDefault(); toggleRecord(); }
 });
 
+setMode(detectMode());
 loadLibrary();
