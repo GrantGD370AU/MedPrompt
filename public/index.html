@@ -121,11 +121,16 @@
         <span id="record-label">Start listening</span>
       </button>
       <button id="next-btn" class="btn btn-ghost">Next ›</button>
+      <button id="xr-btn" class="btn btn-xr" style="display:none">Enter AR</button>
       <span class="kbd-hint">← → to move · Space next · R to record</span>
       <span class="voice-hint">Say “prompter next”, “prompter back”, “prompter steps”</span>
     </footer>
   </main>
 
   <script src="/app.js"></script>
+  <script type="importmap">
+  { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+  </script>
+  <script type="module" src="/xr.js"></script>
 </body>
 </html>

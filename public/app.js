@@ -169,6 +169,7 @@ function render() {
   renderBranch();
   updateProgress();
   scrollToCurrent();
+  if (window.MedPromptXR && window.MedPromptXR.sync) window.MedPromptXR.sync();
 }
 
 function renderStage() {
@@ -502,3 +503,28 @@ document.addEventListener("keydown", (e) => {
 
 setMode(detectMode());
 loadLibrary();
+
+/* Engine interface for the immersive (WebXR) layer in xr.js. The XR renderer
+ * reads state through these getters and drives navigation through the same
+ * functions the 2D UI uses, so both views stay in lockstep. */
+window.MedPromptEngine = {
+  state,
+  move,
+  goTo,
+  toggleRecord,
+  chooseBranch,
+  stepById,
+  order: () => state.order,
+  currentStep: () => stepById(state.currentId),
+  isCovered: (id) => state.covered.has(id),
+  branch: () => {
+    const s = stepById(state.currentId);
+    return s && s.branch && !state.brand ? s.branch : null;
+  },
+  progress: () => ({
+    done: state.order.filter((id) => state.covered.has(id)).length,
+    total: state.order.length,
+  }),
+  inEncounter: () => !$("#encounter").classList.contains("hidden"),
+  recording: () => state.recording,
+};

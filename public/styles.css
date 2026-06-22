@@ -219,6 +219,8 @@ button { font-family: inherit; cursor: pointer; }
 /* ---- Controls ---- */
 .controls { display: flex; align-items: center; gap: 14px; padding: 14px 22px; border-top: 1px solid var(--line); background: var(--surface-2); }
 .btn-record { display: inline-flex; align-items: center; gap: 10px; background: var(--ink); color: #fff; border-color: var(--ink); }
+.btn-xr { background: var(--teal-deep); color: #fff; border-color: var(--teal-deep); }
+.btn-xr:hover { background: #0c5d49; border-color: #0c5d49; }
 .btn-record:hover { background: #16303b; border-color: #16303b; }
 .btn-record[aria-pressed="true"] { background: var(--danger); border-color: var(--danger); }
 .rec-dot { width: 9px; height: 9px; border-radius: 50%; background: #fff; opacity: .8; }

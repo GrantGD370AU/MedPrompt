@@ -194,13 +194,65 @@ On-device checklist:
 3. Verify the `prompter …` grammar picks up in your room acoustics and adjust the
    phrases in `VOICE` (`public/app.js`) if needed.
 
-**Immersive (WebXR) — phase 2.** HoloLens 2 Edge supports `immersive-ar`, so a
-future version can render cues as world- or head-locked holograms via three.js or
-Babylon.js against the same `/api/*` backend. Two things to plan for: the additive
-display renders **black as transparent** (use light glyphs, no dark fills — the
-opposite of the 2D slate), and text must stay within the FOV when head-locked. The
-2D focus mode is the pragmatic live build; immersive is an additive layer, not a
-rewrite of the backend.
+**Immersive (WebXR) — built in, target-agnostic.** See the section below.
 
-Because it's standards-based web, the same app also runs in the Meta Quest browser
-and visionOS Safari — it isn't locked to HoloLens.
+Because it's standards-based web, the same app runs in the Meta Quest browser and
+visionOS Safari — it isn't locked to HoloLens.
+
+---
+
+## Immersive mode (WebXR)
+
+`public/xr.js` adds a holographic version of the prompter that runs on any WebXR
+headset. An **Enter AR / Enter VR** button appears in the encounter controls when
+the device supports an immersive session; on a phone or laptop it stays hidden and
+the 2D app is unaffected.
+
+It is a **renderer over the existing engine**, not a second app. The hologram reads
+state through `window.MedPromptEngine` and navigates through the same
+`move` / `goTo` / `chooseBranch` / `toggleRecord` functions the 2D UI uses, so the
+flat view, the AI coach, and the floating panel never disagree. The mic, Whisper
+transcription, voice grammar and auto-advance all keep running inside the session.
+
+How it stays target-agnostic:
+
+- **Session selection** — requests `immersive-ar`, falls back to `immersive-vr`,
+  falls back to the 2D slate. Covers HoloLens (AR), Quest (AR passthrough or VR)
+  and visionOS Safari (VR).
+- **Display blending** — reads `session.environmentBlendMode` at runtime. On
+  `additive` displays (HoloLens, where black renders as transparent) it drops the
+  panel fill and uses bright glyphs with a glow; on `alpha-blend` / `opaque`
+  (Quest, visionOS, VR) it draws a translucent dark panel for contrast. One
+  renderer, no per-device build.
+- **Input** — binds the WebXR `select` event, which every device raises from its
+  own gesture: HoloLens air-tap, Quest controller/hand, visionOS eye-and-pinch.
+  A ray from the pointer selects the floating Back / Listen / Steps / Next / Exit
+  buttons; branch choices (e.g. Coumadin vs Marevan) surface as buttons too.
+- **Comfort** — the panel lazy-follows the head at a fixed distance, raised
+  slightly like a real teleprompter, and billboards to face the user.
+
+### three.js dependency
+
+The module imports `three` via an import map in `index.html`, pinned to a CDN:
+
+```html
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+</script>
+```
+
+For a fully self-contained deploy (no third-party CDN, friendlier to strict CSPs
+and offline-ish headsets), vendor it instead: download `three.module.js` into
+`public/vendor/` and point the import map at `/vendor/three.module.js`. Nothing
+else changes.
+
+### Device notes
+
+- **Grant the microphone in the 2D view first** (tap **Start listening** once),
+  then enter immersive — some headsets surface the permission prompt awkwardly
+  mid-session.
+- HoloLens 2 and Quest expose `immersive-ar`; visionOS Safari currently exposes
+  `immersive-vr`, so on Vision Pro the cues float against a VR backdrop rather
+  than passthrough. The renderer handles both without code changes.
+- WebXR requires HTTPS — the Worker's `workers.dev` (or your custom domain)
+  already satisfies this.
