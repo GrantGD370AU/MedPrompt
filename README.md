@@ -267,8 +267,10 @@ holographic design guidance:
   colour fringing as the head-locked panel moves with you. Whites are kept around
   R235 (not pure `#FFFFFF`) and used for strokes, not large bright fills, which
   cause eye fatigue and blotchiness on additive displays.
-- **Teal/green accents, not pure primaries.** Green is the efficient channel on
-  the waveguide; mixed teal tones fringe far less than pure red/green/blue.
+- **Warm amber accent, green only for "covered".** Warm colours advance toward
+  the viewer on additive displays, so amber pops harder than a cool accent while
+  sitting further from a pure channel (less fringing). Green is reserved for the
+  single "covered" state, where done-equals-green is a useful universal signal.
 - **State is never colour-only** — covered vs current vs upcoming also differ by
   icon and position, so it survives fringing and washout.
 - **Avoid red for alerts in immersive.** Red is the worst hue for fringing and

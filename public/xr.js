@@ -144,10 +144,10 @@ function theme() {
     panelBg: additive ? "rgba(8,16,20,0.92)" : "rgba(12,24,30,0.86)",
     text: "#EAF2EE",       // ~235 — bright but below pure white
     dim: "#9fb6ad",
-    accent: "#1ec79c",     // teal/green: the efficient, low-fringe channel
-    covered: "#5fc7a6",
+    accent: "#e8a948",     // warm amber: advances on additive, low fringe
+    covered: "#5fc7a6",    // green kept only for the covered state
     btnFill: additive ? "rgba(18,34,40,0.9)" : "rgba(22,44,54,0.92)",
-    btnBorder: "#2fe0b0",
+    btnBorder: "#e8a948",
   };
 }
 
@@ -191,7 +191,7 @@ function drawCue() {
     ctx.fill();
   }
   if (t.additive) {
-    ctx.shadowColor = "rgba(30,199,156,0.55)";
+    ctx.shadowColor = "rgba(210,150,50,0.5)";
     ctx.shadowBlur = 14;
   } else ctx.shadowBlur = 0;
 
@@ -216,7 +216,7 @@ function drawCue() {
 
   // cue text
   if (t.additive) {
-    ctx.shadowColor = "rgba(20,160,130,0.4)";
+    ctx.shadowColor = "rgba(210,150,50,0.4)";
     ctx.shadowBlur = 8;
   }
   ctx.fillStyle = t.text;
@@ -292,14 +292,14 @@ function drawButton(p, hover) {
   ctx.fillStyle = hover
     ? t.accent
     : accent
-    ? (t.additive ? "rgba(30,199,156,0.5)" : "rgba(20,90,72,0.95)")
+    ? (t.additive ? "rgba(220,150,50,0.42)" : "rgba(120,75,15,0.95)")
     : t.btnFill;
   roundRect(ctx, 8, 30, canvas.width - 16, canvas.height - 60, 26);
   ctx.fill();
   ctx.lineWidth = 4;
   ctx.strokeStyle = hover ? "#ffffff" : t.btnBorder;
   ctx.stroke();
-  ctx.fillStyle = hover ? "#06241b" : t.text;
+  ctx.fillStyle = hover ? "#2a1b04" : t.text;
   ctx.font = "600 40px Inter, system-ui, sans-serif";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
