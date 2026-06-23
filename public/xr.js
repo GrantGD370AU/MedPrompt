@@ -135,15 +135,19 @@ function buildPanels() {
 
 function theme() {
   const additive = blendMode === "additive";
+  // Microsoft holographic guidance: keep a dark backplate with light (~R235)
+  // text in BOTH blend modes. On additive displays it still secures legibility
+  // and gives a dark edge border that reduces colour fringing during head
+  // motion. White stays off-white and is used for strokes, never large fills.
   return {
     additive,
-    panelBg: additive ? null : "rgba(12,24,30,0.86)",
-    text: additive ? "#F3FBF8" : "#EAF2EE",
-    dim: additive ? "#CFE6DC" : "#9bb0a8",
-    accent: "#1ec79c",
+    panelBg: additive ? "rgba(8,16,20,0.92)" : "rgba(12,24,30,0.86)",
+    text: "#EAF2EE",       // ~235 — bright but below pure white
+    dim: "#9fb6ad",
+    accent: "#1ec79c",     // teal/green: the efficient, low-fringe channel
     covered: "#5fc7a6",
-    btnFill: additive ? "rgba(70,110,95,0.34)" : "rgba(22,44,54,0.92)",
-    btnBorder: additive ? "#2fe0b0" : "#1ec79c",
+    btnFill: additive ? "rgba(18,34,40,0.9)" : "rgba(22,44,54,0.92)",
+    btnBorder: "#2fe0b0",
   };
 }
 
@@ -212,8 +216,8 @@ function drawCue() {
 
   // cue text
   if (t.additive) {
-    ctx.shadowColor = "rgba(20,160,130,0.5)";
-    ctx.shadowBlur = 12;
+    ctx.shadowColor = "rgba(20,160,130,0.4)";
+    ctx.shadowBlur = 8;
   }
   ctx.fillStyle = t.text;
   ctx.font = "600 60px Inter, system-ui, sans-serif";
@@ -227,7 +231,7 @@ function drawCue() {
     ctx.fillText(branch.prompt, padX, y + 16);
   } else if (step?.detail?.length) {
     ctx.fillStyle = t.dim;
-    ctx.font = "400 32px Inter, system-ui, sans-serif";
+    ctx.font = "500 32px Inter, system-ui, sans-serif";
     let dy = y + 24;
     for (const d of step.detail.slice(0, 3)) {
       ctx.fillStyle = t.accent;
