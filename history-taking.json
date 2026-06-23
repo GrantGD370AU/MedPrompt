@@ -1,0 +1,23 @@
+name = "medprompt"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+# Serve the plain HTML/JS frontend straight from the Worker.
+assets = { directory = "./public", binding = "ASSETS" }
+
+# Workers AI — enables Whisper transcription, the live coach, and guide generation.
+[ai]
+binding = "AI"
+
+# D1 — optional. Enables saved/generated guides and (text-only) session storage.
+# Create with:  npx wrangler d1 create medprompt
+# then paste the returned database_id below and uncomment this block.
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "medprompt"
+# database_id = "PASTE-YOUR-D1-DATABASE-ID-HERE"
+
+[vars]
+# Optional: route Workers AI calls through an AI Gateway for logging/caching/limits.
+# Set to your AI Gateway id, or leave blank to call Workers AI directly.
+AI_GATEWAY_ID = ""

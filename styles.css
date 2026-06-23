@@ -1,0 +1,172 @@
+{
+  "id": "warfarin-counselling",
+  "title": "Warfarin counselling",
+  "type": "counselling",
+  "discipline": ["pharmacy", "medicine", "nursing"],
+  "summary": "Step-by-step counselling for a patient newly started on, or continuing, warfarin. Covers the brand fork (Coumadin vs Marevan), INR monitoring, bleeding risk, interactions, diet and support services.",
+  "disclaimer": "For simulated education and experimental use only. Not for clinical use.",
+  "redFlags": [
+    "Signs of major bleeding (haematemesis, melaena, frank haematuria, large bruising) need urgent escalation.",
+    "INR well above target range markedly raises bleeding risk."
+  ],
+  "steps": [
+    {
+      "id": "intro",
+      "label": "Introduction",
+      "cue": "Introduce yourself, confirm the patient's identity, and explain why you're here.",
+      "detail": [
+        "Give your name and role.",
+        "Confirm patient identity (name + a second identifier).",
+        "State the purpose of the conversation."
+      ],
+      "coverageHints": ["my name", "introduce", "who you are", "confirm your name", "date of birth", "here to talk about your warfarin"]
+    },
+    {
+      "id": "step-1",
+      "label": "CMI & booklet",
+      "cue": "Has the patient received a CMI and warfarin booklet, and read them?",
+      "detail": [
+        "If not, provide both now.",
+        "Allow time to read both even if not yet fully understood."
+      ],
+      "coverageHints": ["consumer medicine information", "cmi", "booklet", "have you read"]
+    },
+    {
+      "id": "step-2",
+      "label": "What warfarin is",
+      "cue": "Check the patient understands what warfarin is and why they're taking it.",
+      "detail": [
+        "Warfarin is an anticoagulant; it inhibits vitamin-K epoxide reductase, reducing active clotting factors (II, VII, IX, X) and lowering coagulation.",
+        "Indications include: prevention/treatment of VTE; prevention of thromboembolism with prosthetic heart valves; stroke prevention after MI with embolic risk."
+      ],
+      "coverageHints": ["blood thinner", "anticoagulant", "clotting", "why you are taking", "indication", "what warfarin is"]
+    },
+    {
+      "id": "step-3",
+      "label": "Brand awareness",
+      "cue": "Is the patient aware of the two warfarin brands and their strengths?",
+      "detail": [
+        "There are two brands available in Australia and they are NOT bioequivalent.",
+        "Confirm which brand the patient takes before continuing."
+      ],
+      "coverageHints": ["brand", "coumadin", "marevan", "not interchangeable", "bioequivalent"],
+      "branch": {
+        "prompt": "Which brand is the patient on?",
+        "options": [
+          { "label": "Coumadin", "goto": "step-3-coumadin" },
+          { "label": "Marevan", "goto": "step-3-marevan" }
+        ]
+      }
+    },
+    {
+      "id": "step-3-coumadin",
+      "label": "Coumadin strengths",
+      "cue": "Coumadin comes in three strengths — confirm the patient can identify them.",
+      "detail": [
+        "1 mg (tan), 2 mg (lavender), 5 mg (green).",
+        "Emphasise colour and strength; tablets look dissimilar to Marevan.",
+        "Coumadin is NOT bioequivalent to Marevan — never switch brands without supervision."
+      ],
+      "coverageHints": ["1 mg", "2 mg", "5 mg", "tan", "lavender", "green", "colour"],
+      "next": "step-4"
+    },
+    {
+      "id": "step-3-marevan",
+      "label": "Marevan strengths",
+      "cue": "Marevan comes in three strengths — confirm the patient can identify them.",
+      "detail": [
+        "1 mg (brown), 3 mg (blue), 5 mg (pink).",
+        "Emphasise colour and strength; tablets look dissimilar to Coumadin.",
+        "Marevan is NOT bioequivalent to Coumadin — never switch brands without supervision."
+      ],
+      "coverageHints": ["1 mg", "3 mg", "5 mg", "brown", "blue", "pink", "colour"],
+      "next": "step-4"
+    },
+    {
+      "id": "step-4",
+      "label": "Monitoring (INR)",
+      "cue": "Educate the patient about INR monitoring — a critical point that may take time.",
+      "detail": [
+        "Warfarin is a narrow therapeutic index drug, monitored by INR.",
+        "INR every 24 h until a maintenance dose is set; then weekly to twice-weekly for 3–4 weeks; then weekly to monthly thereafter.",
+        "Missed dose: never take a double dose; follow the healthcare team's instructions to keep INR stable."
+      ],
+      "coverageHints": ["inr", "blood test", "monitoring", "narrow therapeutic", "missed dose", "double dose"]
+    },
+    {
+      "id": "step-5",
+      "label": "Bleeding risk",
+      "cue": "Counsel on bleeding risk and when to seek help.",
+      "detail": [
+        "Bleeding is a common, potentially serious adverse effect.",
+        "INR above target → increased bleeding risk; INR below target → increased clotting risk; bleeding is still possible in range.",
+        "Usual INR target is 2–3 (higher for some indications/specialist advice).",
+        "Discuss obvious bleeds (e.g. nosebleeds, blood in urine/stool) and less obvious bleeds (e.g. unusual bruising, fatigue).",
+        "Seek medical help for less-obvious signs, or obvious bleeds with excessive or prolonged blood loss — investigate, elevated INR probable."
+      ],
+      "coverageHints": ["bleeding", "bruise", "target range", "2 to 3", "seek help", "blood in"]
+    },
+    {
+      "id": "step-6",
+      "label": "Drug interactions",
+      "cue": "Make sure the patient knows about medicine and complementary-product interactions.",
+      "detail": [
+        "Interactions occur with OTC, prescription and complementary medicines.",
+        "Interactions may affect INR and platelets.",
+        "Starting OR stopping medicines can alter INR — manage with more frequent testing."
+      ],
+      "coverageHints": ["interaction", "other medicines", "over the counter", "supplements", "complementary", "tell your pharmacist"]
+    },
+    {
+      "id": "step-7",
+      "label": "Conditions affecting INR",
+      "cue": "Make sure the patient knows common conditions that can affect INR.",
+      "detail": [
+        "Vomiting and/or diarrhoea can reduce warfarin absorption, potentially lowering INR.",
+        "Fever or infection can enhance warfarin metabolism, potentially lowering INR.",
+        "Contact the GP if these occur."
+      ],
+      "coverageHints": ["vomiting", "diarrhoea", "fever", "infection", "sick", "unwell"]
+    },
+    {
+      "id": "step-8",
+      "label": "Diet & lifestyle",
+      "cue": "Cover the dietary and lifestyle interactions of warfarin.",
+      "detail": [
+        "Keep a balanced, consistent diet to keep INR stable; avoid bingeing or excessive dieting.",
+        "Alcohol can increase INR and bleeding risk — only moderate intake if the patient chooses to drink."
+      ],
+      "coverageHints": ["diet", "vitamin k", "greens", "consistent", "alcohol", "lifestyle"]
+    },
+    {
+      "id": "step-9",
+      "label": "Inform other clinicians",
+      "cue": "Stress the importance of telling other health professionals they take warfarin.",
+      "detail": [
+        "Tell every health professional seen — nurses, pharmacists, doctors, dentists.",
+        "This avoids added risk around procedures and changes to therapy."
+      ],
+      "coverageHints": ["tell your dentist", "tell your doctor", "other health", "procedure", "surgery"]
+    },
+    {
+      "id": "step-10",
+      "label": "Storage",
+      "cue": "Give recommendations on storage conditions.",
+      "detail": [
+        "Store below 30 °C.",
+        "Keep in original packaging unless repackaged into a Dose Administration Aid by a pharmacy."
+      ],
+      "coverageHints": ["store", "storage", "30 degrees", "original packaging", "dose administration aid"]
+    },
+    {
+      "id": "step-11",
+      "label": "Support services",
+      "cue": "Point the patient to organisations that support warfarin management.",
+      "detail": [
+        "Local community pharmacies and the patient's GP.",
+        "Pathology warfarin care programs — e.g. Sullivan Nicolaides (1300 769 440), QML Pathology (1300 661 963)."
+      ],
+      "coverageHints": ["support", "pharmacy", "gp", "warfarin care", "pathology", "help line"]
+    }
+  ]
+}
